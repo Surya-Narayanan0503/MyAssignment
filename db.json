@@ -1,0 +1,19 @@
+{
+    "mytodo":[
+        
+            {
+                "id":"1",
+                "type": "Integer"
+                
+            },
+            {
+                "id" : "2",
+                "type" : "string"
+            },
+            {
+                "id" : "3",
+                "type":"Float"
+            }
+        
+    ]
+}
