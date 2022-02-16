@@ -1,0 +1,19 @@
+{
+  "name": "myassignment",
+  "version": "1.0.0",
+  "description": "<<<<<<< HEAD\r # About",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Surya-Narayanan0503/MyAssignment.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Surya-Narayanan0503/MyAssignment/issues"
+  },
+  "homepage": "https://github.com/Surya-Narayanan0503/MyAssignment#readme"
+}
