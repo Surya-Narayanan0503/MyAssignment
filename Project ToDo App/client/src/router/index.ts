@@ -3,7 +3,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from '../pages/Home.vue';
 //import Messages from '../pages/Messages.vue';
 import Generic from '../pages/Generic.vue';
-import Login from '../pages/Login.vue';
+import Login from '../pages/login.vue';
 import session from "../models/session";
 import AssignedTasks from "../pages/AssignedTasks.vue";
 import AllTasks from "../pages/AllTasks.vue"
