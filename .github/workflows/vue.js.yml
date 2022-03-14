@@ -27,11 +27,11 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-      working-directory: Project ToDo App/client
+      working-directory: todo-client
 
     - name: Copy static files
       run: |
-          cp -a Project ToDo App/client/dist/. dist/
+          cp -a todo-client/dist/. dist/
           cp composer.json dist/
           
     - name: Deploy 🚀
