@@ -37,7 +37,7 @@ const isOpen = ref(false);
             <div class="navbar-dropdown">
               <router-link class="navbar-item" to="/assignedtasks">Assigned tasks</router-link>
               <!--router-link class="navbar-item" to="/viewAllTasks">All Tasks</router-link-->
-              <div v-bind:style="styles"></div>
+              <!-- <div v-bind:style="styles"></div> -->
             </div>
           </div>
           <div class="navbar-item has-dropdown is-hoverable">
@@ -62,6 +62,6 @@ const isOpen = ref(false);
   </nav>
 </template>
 
-styles: {
-	'background color': 'green';
-}
+// styles: {
+// 	'background color': 'green';
+// }
