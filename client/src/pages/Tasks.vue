@@ -96,8 +96,9 @@ const logout = () => {
 
 	<nav>
 		<div class="sessionContainer">
+			<img :src="users.filter(u => u.username === session.username)[0].avatar">
 			<p>{{ session.username }}</p>
-			<button @click="logout" class="is-normal is-outlined">Log Out</button>
+			<button @click="logout" class="button is-normal is-outlined">Log out</button>
 		</div>
 	</nav>
 
@@ -146,6 +147,10 @@ const logout = () => {
 	font-weight: 600;
 	color: #4285f4;
 	cursor: pointer;
+
+	&:hover {
+		color: lightcoral;
+	}
 }
 
 nav {
@@ -162,6 +167,12 @@ nav {
 		position: absolute;
 		right: 0;
 		margin: 20px;
+
+		img {
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+		}
 
 		p {
 			font-weight: 600;
@@ -235,6 +246,15 @@ nav {
 		color: #abc9f8;
 		font-weight: 600;
 		cursor: pointer;
+		width: 33%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&:hover {
+			color: lightcoral;
+		}
 	}
 
 	.active {
