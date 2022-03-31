@@ -107,13 +107,12 @@ const logout = () => {
 			<div class="heading">TODO</div>
 			<div class="taskList">
 				<div class="card task" v-for="task in getTasks(tasks, false)" :key="task.title">
-					<div class="title">{{task.title}}</div>
-					<div class="for">{{task.for}}</div>
-					<div class="date">{{task.date}} • {{task.by}}</div>
-					<div class="field">
-						<label>Done</label>
-						<input type="checkbox" v-model="task.done" />
-					</div>
+					<button class="button is-small" @click="()=>task.done = true">{{task.done ? "✘" : "✔"}}</button>
+					<div class="for">for | {{task.for}}</div>
+					<div class="date">due | {{task.date}}</div>
+					<div class="ttitle">{{task.title}}</div>
+					<div class="assignedH">Assigned by</div>
+					<div class="assignedC">{{task.by}}</div>
 				</div>
 			</div>
 		</div>
@@ -121,13 +120,12 @@ const logout = () => {
 			<div class="heading">DONE</div>
 			<div class="taskList">
 				<div class="card task" v-for="task in getTasks(tasks, true)" :key="task.title">
-					<div class="title">{{task.title}}</div>
-					<div class="for">{{task.for}}</div>
-					<div class="date">{{task.date}} • {{task.by}}</div>
-					<div class="field">
-						<label>Done</label>
-						<input type="checkbox" v-model="task.done" />
-					</div>
+					<button class="button is-small" @click="()=>task.done = false">{{task.done ? "✘" : "✔"}}</button>
+					<div class="for">for | {{task.for}}</div>
+					<div class="date">due | {{task.date}}</div>
+					<div class="ttitle">{{task.title}}</div>
+					<div class="assignedH">Assigned by</div>
+					<div class="assignedC">{{task.by}}</div>
 				</div>
 			</div>
 		</div>
@@ -311,38 +309,56 @@ h1 {
 			align-items: center;
 
 			.task {
-				height: 40px;
+				height: 160px;
+				padding: 20px;
 				width: 95%;
-				display: flex;
-				justify-content: space-between;
-				flex-direction: row;
-				align-items: center;
 				margin-top: 10px;
 
-				.title {
-					margin: 0;
-					font-size: 18px;
+				button {
+					position: absolute;
+					padding: 5px;
+					height: 24px;
+					width: 24px;
+				}
+
+				.for {
+					position: absolute;
+					left: 60px;
+					font-size: 14px;
 					font-weight: 600;
-					padding: 10px;
-					width: 200px;
+					color: grey;
 				}
 
-				.date, .for {
-					font-weight: 500;
-					color: rgb(167, 167, 167);
-					width: 200px;
-					text-align: center;
+				.date {
+					position: absolute;
+					right: 30px;
+					font-size: 14px;
+					font-weight: 600;
+					color: grey;
 				}
 
-				.field {
-					label {
-						font-weight: 500;
-					}
+				.ttitle {
+					position: absolute;
+					top: 50px;
+					left: 60px;
+					font-weight: 800;
+					font-size: 24px;
+				}
 
-					input {
-						margin-right: 20px;
-						margin-left: 10px;
-					}
+				.assignedH {
+					position: absolute;
+					top: 100px;
+					left: 60px;
+					font-size: 13px;
+					color: grey;
+				}
+
+				.assignedC {
+					position: absolute;
+					top: 120px;
+					left: 60px;
+					font-weight: 600;
+					font-size: 16px;
 				}
 			}
 		}

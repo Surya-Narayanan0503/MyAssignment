@@ -24,7 +24,9 @@ const signin = () => {
 </script>
 
 <template>
+	<h1 class="title">To Do</h1>
 	<div class="container">
+		<img src="../assets/checklist.svg" width="900">
 		<div class="card">
 			<h1>SIGN IN</h1>
 			<div class="field">
@@ -42,18 +44,20 @@ const signin = () => {
 </template>
 
 <style scoped lang="scss">
+
+h1.title {
+	position: absolute;
+	top: 100px;
+	font-weight: 800;
+	font-size: 48px;
+}
 .container {
-	background: linear-gradient(
-		45deg,
-		rgba(66, 183, 245, 0.8) 0%,
-		rgba(66, 245, 189, 0.4) 100%
-	);
 	width: 100%;
 	height: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	flex-direction: column;
+	flex-direction: row;
 	max-width: 100% !important;
 	.card {
 		width: 600px;
