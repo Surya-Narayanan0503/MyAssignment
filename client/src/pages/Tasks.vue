@@ -1,67 +1,186 @@
-<script setup lang="ts">
-import { ref } from 'vue';
+<script>
+
 import { endSession, session } from '../models/session';
-import { ITask, tasks } from '../models/tasks';
-import { users } from '../models/users';
+import { useCookies } from 'vue3-cookies';
 import router from '../router';
+import axios from 'axios';
 
-const tabs = ['Assigned', 'Created', 'All'];
-const currentTab = ref(tabs[0]);
+const { cookies } = useCookies();
 
-const tabClass = (tab: string) => tab === currentTab.value ? 'tab active' : 'tab';
+export default {
+   data () {
+	const tabs = ["For me", "By me", "All"];
+    return {
+	  tabContent : ["For me", "By me", "All"],	
+	  todoTitle : '',
+	  todoFor : '',
+	  todoDate : '',
+	  token : session.token,
+	  username: session.username,
+      doneTodos : [],
+	  notDoneTodos : [],
+	  currentTab: tabs[1],
+	  modalState : false,
+	  users : []
+    }
+  },
+  methods : {
 
-if(!session.isLoggedIn) router.push('/');
+	async getAllUsers(){
+		const { data, status } = 
+			await axios.get(`http://localhost:5000/api/users`,);
+		this.users = data.map(e => e.userName)
+	},
 
-const getTasks = (e: ITask[], done: boolean): ITask[] => {
-	if(currentTab.value == tabs[0])
-		if(done)
-			return e.filter(t => t.for === session.username && t.done);
-		else
-			return e.filter(t => t.for === session.username && !t.done);
+	logout() {
+		endSession(cookies);
+		router.push('/');
+	},
 
-	if(currentTab.value == tabs[1])
-		if(done)
-			return e.filter(t => t.by === session.username && t.done);
-		else
-			return e.filter(t => t.by === session.username && !t.done);
+	tabClass(tab) {
+		if(tab === this.currentTab)
+			return 'todosSideBtn tabActive'
+		return 'todosSideBtn';
+	},
 
-	if(done)
-		return e.filter(t => t.done);
-	else
-		return e.filter(t => !t.done);
+	modalClass() {
+		return this.modalState ? 'modal is-active' : 'modal';	
+	},
+
+	async changeTab(tab) {
+		this.currentTab = tab;
+		await this.getTodos();
+	},
+
+	async changeDoneStatus(state,todo){
+		const todoToEdit = {
+			by: todo.username,
+			date: todo.todoDate,
+			desc: "des",
+			done: state,
+			for: todo.todoFor,
+			title: todo.todoTitle
+		};
+		const { data, status } = await axios.put(
+			`http://localhost:5000/api/todos/${todo._id}`,
+			todoToEdit,
+			{
+				headers: {
+				'x-auth-token': this.token,
+				},
+			},
+		);
+		if(status == 201){
+			console.log(state);
+			if(!state){
+				this.notDoneTodos = [...this.notDoneTodos, data]
+				this.doneTodos = this.doneTodos.filter(todo => todo._id !== data._id);
+				console.log(this.doneTodos);
+			}
+			else {
+				this.doneTodos = [...this.doneTodos, data]
+				this.notDoneTodos = this.notDoneTodos.filter(todo => todo._id !== data._id);
+				console.log(this.notDoneTodos);
+			}
+		}
+	},
+
+	async getTodos() {
+		if(this.currentTab == this.tabContent[0]){
+			const { data, status } = await axios.get(
+				`http://localhost:5000/api/todos?for=${this.username}`,
+				{
+					headers: {
+					'x-auth-token': this.token,
+					},
+				},
+			);
+
+			console.log(data);
+			if(status >= 200 && status < 300){
+				this.doneTodos = data.filter(t => t.done);
+				this.notDoneTodos = data.filter(t => !t.done);
+			}
+			else {
+				this.doneTodos = [];
+				this.notDoneTodos = [];
+			}
+		}
+	
+		else if(this.currentTab == this.tabContent[1]){
+			const { data, status } = await axios.get(
+				`http://localhost:5000/api/todos?by=${this.username}`,
+				{
+					headers: {
+					'x-auth-token': this.token,
+					},
+				},
+			);
+			if(status >= 200 && status < 300){
+				this.doneTodos = data.filter(t => t.done);
+				this.notDoneTodos = data.filter(t => !t.done);
+			}
+			else {
+				this.doneTodos = [];
+				this.notDoneTodos = [];
+			}
+		}
+
+		else {
+			const { data, status } = await axios.get(
+				`http://localhost:5000/api/todos`,
+				{
+					headers: {
+					'x-auth-token': this.token,
+					},
+				},
+			);
+			if(status >= 200 && status < 300){
+				this.doneTodos = data.filter(t => t.done);
+				this.notDoneTodos = data.filter(t => !t.done);
+			}
+			else {
+				this.doneTodos = [];
+				this.notDoneTodos = [];
+			}
+		}
+	},
+
+	async addTodo () {
+		if(!this.username) return;
+		const todoToCreate = {
+			by: this.username,
+			date: this.todoDate,
+			desc: "some desc",
+			done: false,
+			for: this.todoFor,
+			title: this.todoTitle
+		};
+		const { data, status } = await axios.post(
+			`http://localhost:5000/api/todos`,
+			todoToCreate,
+			{
+				headers: {
+				'x-auth-token': this.token,
+				},
+			},
+		);
+		if(status == 201){
+			this.notDoneTodos = [...this.notDoneTodos, data]
+		}
+		this.modalState = false;
+	}
+  },
+  async created () {
+    await this.getAllUsers();
+	await this.getTodos();
+  }
 }
-
-const modalState = ref<boolean>(false);
-
-const modalClass = (modalState: boolean): string => modalState ? 'modal is-active' : 'modal';
-
-const title = ref<string>('');
-const tfor = ref<string>('');
-const date = ref<string>('');
-
-const addTask = () => {
-	if(!session.username) return;
-	tasks.value.push({
-		by: session.username,
-		date: date.value,
-		done: false,
-		for: tfor.value,
-		title: title.value
-	});
-	modalState.value = false;
-}
-
-const logout = () => {
-	endSession();
-	router.push('/');
-};
-
 </script>
-
 <template>
 	<h1>T O D O</h1>
 	<div class="card tabs">
-		<div :class="tabClass(tab)" v-for="tab in tabs" @click="() => (currentTab = tab)">{{ tab }}</div>
+		<div :class="tabClass(tab)" v-for="tab in tabContent" @click="changeTab(tab)">{{ tab }}</div>
 	</div>
 	<div class="card add" @click="() => modalState = true">Add</div>
 
@@ -69,26 +188,29 @@ const logout = () => {
   	<div class="modal-background" @click="()=>modalState=false"></div>
   	<div class="modal-content">
   	  <div class="card">
-				<h1>Add Task</h1>
-				<input class="input is-normal" type="text" placeholder="Title" v-model="title" />
+				<h1>Add Todo</h1>
+				<input class="input is-normal" type="text" placeholder="Title" v-model="todoTitle" />
 
 				<div class="dropdown is-hoverable">
 					<div class="dropdown-trigger">
 						<div class="field">
 							<div class="control">
-								<input class="input is-normal" type="search	" placeholder="For" v-model="tfor" />
+								<input class="input is-normal" type="search	" placeholder="For" v-model="todoFor" />
 							</div>
 						</div>
 					</div>
 					<div class="dropdown-menu" id="dropdown-menu" role="menu">
 						<div class="dropdown-content">
-								<a href="#" class="dropdown-item" v-for="user in users" @click="()=>tfor=user.username">{{user.username}}</a>
+							<a href="#" class="dropdown-item" 
+								v-for="user in users" @click="()=>todoFor=user">
+								{{user}}
+							</a>
 						</div>
 					</div>
 				</div>
 
-				<input class="input is-normal" type="date" placeholder="Date" v-model="date" />
-				<button class="button is-normal" @click="addTask">Add</button>
+				<input class="input is-normal" type="date" placeholder="Date" v-model="todoDate" />
+				<button class="button is-normal" @click="addTodo">Add</button>
 			</div>
   	</div>
   	<button class="modal-close is-large" aria-label="close" @click="()=>modalState=false"></button>
@@ -96,36 +218,35 @@ const logout = () => {
 
 	<nav>
 		<div class="sessionContainer">
-			<img :src="users.filter(u => u.username === session.username)[0].avatar">
-			<p>{{ session.username }}</p>
+			<p>{{ username }}</p>
 			<button @click="logout" class="button is-normal is-outlined">Log out</button>
 		</div>
 	</nav>
 
-	<div class="tasks">
+	<div class="todos">
 		<div class="half">
 			<div class="heading">TODO</div>
-			<div class="taskList">
-				<div class="card task" v-for="task in getTasks(tasks, false)" :key="task.title">
-					<button class="button is-small" @click="()=>task.done = true">{{task.done ? "✘" : "✔"}}</button>
-					<div class="for">for | {{task.for}}</div>
-					<div class="date">due | {{task.date}}</div>
-					<div class="ttitle">{{task.title}}</div>
+			<div class="todoList">
+				<div class="card todo" v-for="todo in notDoneTodos" :key="todo.title">
+					<button class="button is-small" @click="changeDoneStatus(true,todo)">{{todo.done ? "✘" : "✔"}}</button>
+					<div class="for">for | {{todo.for}}</div>
+					<div class="date">due | {{todo.date}}</div>
+					<div class="ttitle">{{todo.title}}</div>
 					<div class="assignedH">Assigned by</div>
-					<div class="assignedC">{{task.by}}</div>
+					<div class="assignedC">{{todo.by}}</div>
 				</div>
 			</div>
 		</div>
 		<div class="half">
 			<div class="heading">DONE</div>
-			<div class="taskList">
-				<div class="card task" v-for="task in getTasks(tasks, true)" :key="task.title">
-					<button class="button is-small" @click="()=>task.done = false">{{task.done ? "✘" : "✔"}}</button>
-					<div class="for">for | {{task.for}}</div>
-					<div class="date">due | {{task.date}}</div>
-					<div class="ttitle">{{task.title}}</div>
+			<div class="todoList">
+				<div class="card todo" v-for="todo in doneTodos" :key="todo.title">
+					<button class="button is-small" @click="changeDoneStatus(false,todo)">{{todo.done ? "✘" : "✔"}}</button>
+					<div class="for">for | {{todo.for}}</div>
+					<div class="date">due | {{todo.date}}</div>
+					<div class="ttitle">{{todo.title}}</div>
 					<div class="assignedH">Assigned by</div>
-					<div class="assignedC">{{task.by}}</div>
+					<div class="assignedC">{{todo.by}}</div>
 				</div>
 			</div>
 		</div>
@@ -221,7 +342,6 @@ nav {
 
 		button {
 			margin-top: 20px;
-			width: 80%;
 		}
 	}
 }
@@ -270,7 +390,7 @@ h1 {
 	transform: translateX(-50%);
 }
 
-.tasks {
+.todos {
 	position: absolute;
 	display: flex;
 	flex-direction: row;
@@ -298,7 +418,7 @@ h1 {
 			color: rgb(161, 161, 161);
 		}
 
-		.taskList {
+		.todoList {
 			top: 50px;
 			position: relative;
 			display: flex;
@@ -308,7 +428,7 @@ h1 {
 			flex-direction: column;
 			align-items: center;
 
-			.task {
+			.todo {
 				height: 160px;
 				padding: 20px;
 				width: 95%;

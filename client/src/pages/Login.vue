@@ -1,27 +1,76 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { session } from '../models/session';
-import { users } from '../models/users';
+
+import { ref } from "vue";
+import { useCookies } from 'vue3-cookies';
+import { setSession } from '../models/session';
 import router from '../router';
+import axios from 'axios';
 
+const username = ref('');
+const password = ref('');
+const incorrect = ref('invisible');
 
-const user = ref('');
-const pass = ref('');
-const invalid = ref('');
+const { cookies } = useCookies();
 
-const signin = () => {
-	invalid.value = '';
-	const valid = users.value.filter(u => u.username === user.value && u.password === pass.value).length > 0;
-	if(valid) {
-		session.username = user.value;
-		session.isLoggedIn = true;
+const signin = async () => {
+	
+	console.log(username.value);
+	console.log(password.value);
+	
+
+	const response = await axios.post('http://localhost:5000/api/auth', {
+		userName : username.value,
+		password : password.value
+	});	
+
+	if (response.status >= 200 && response.status < 300) {
+		incorrect.value = "invisible";
+		setSession({
+			isLoggedIn: "true",
+			token: response.data.token,
+			username: username.value,
+		}, cookies);
 		router.push('/tasks');
-	} else {
-		invalid.value = 'Invalid Username or Password';
 	}
+
+	else {
+		incorrect.value = "visible";
+		username.value = "";
+		password.value = "";
+	}
+};
+
+const modalState = ref<boolean>(false);
+
+const modalClass = (modalState: boolean): string => modalState ? 'modal is-active' : 'modal';
+
+const rUser = ref('');
+const rPass = ref('');
+const rCPass = ref('');
+const rError = ref('');
+
+const register = async () => {
+	rError.value = ' ';
+
+	if(rUser.value === '' || rPass.value === '' || rCPass.value === '')
+		return rError.value = 'Some field is left empty';
+
+	if(rPass.value !== rCPass.value)
+		return rError.value = "Passwords don't match";
+
+	await axios.post('http://localhost:5000/api/users', {
+		userName : rUser.value,
+		password : rPass.value
+	});
+
+	modalState.value = false;
+	rUser.value = '';
+	rPass.value = '';
+	rCPass.value = '';
 }
 
 </script>
+
 
 <template>
 	<h1 class="title">To Do</h1>
@@ -31,11 +80,11 @@ const signin = () => {
 			<h1>SIGN IN</h1>
 			<div class="field">
 				<label>USERNAME</label>
-				<input class="input" type="text" v-model="user" />
+				<input class="input" type="text" v-model="username" />
 			</div>
 			<div class="field">
 				<label>PASSWORD</label>
-				<input class="input" type="password" v-model="pass" />
+				<input class="input" type="password" v-model="password" />
 			</div>
 			<p>{{invalid}}</p>
 			<button class="button" @click="signin">LOG IN</button>
