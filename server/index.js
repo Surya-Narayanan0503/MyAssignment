@@ -19,7 +19,12 @@ const PORT = process.env.PORT ?? 5000;
 app.listen(PORT, () => {
     console.info(`App Running on Port ${PORT}`)
     try {
+<<<<<<< HEAD
         mongoose.connect(`mongodb://localhost/Todos`, {
+=======
+        mongoose.connect(`mongodb+srv://Surya:Surya@cluster0.qqdy1.mongodb.net/Todos?retryWrites=true
+        `, {
+>>>>>>> 87eb13aeba4898fa9a33c26ae051313613bc9b0e
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
@@ -28,4 +33,8 @@ app.listen(PORT, () => {
     catch (error) {
         console.log(error.message);
     }
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 87eb13aeba4898fa9a33c26ae051313613bc9b0e

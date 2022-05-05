@@ -23,7 +23,12 @@ const signin = async () => {
 		password : password.value
 	});	
 
+<<<<<<< HEAD
 	if (response.status >= 200 && response.status < 300) {
+=======
+	if (response.status >= 200 && response.status < 300) {		
+		
+>>>>>>> 87eb13aeba4898fa9a33c26ae051313613bc9b0e
 		incorrect.value = "invisible";
 		setSession({
 			isLoggedIn: "true",
@@ -50,7 +55,11 @@ const rCPass = ref('');
 const rError = ref('');
 
 const register = async () => {
+<<<<<<< HEAD
 	rError.value = ' ';
+=======
+	rError.value = '';
+>>>>>>> 87eb13aeba4898fa9a33c26ae051313613bc9b0e
 
 	if(rUser.value === '' || rPass.value === '' || rCPass.value === '')
 		return rError.value = 'Some field is left empty';
@@ -62,7 +71,11 @@ const register = async () => {
 		userName : rUser.value,
 		password : rPass.value
 	});
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 87eb13aeba4898fa9a33c26ae051313613bc9b0e
 	modalState.value = false;
 	rUser.value = '';
 	rPass.value = '';
@@ -88,6 +101,21 @@ const register = async () => {
 			</div>
 			<p>{{invalid}}</p>
 			<button class="button" @click="signin">LOG IN</button>
+			<button class="button" @click="()=>modalState=true">REGISTER</button>
+		</div>
+			<div :class="modalClass(modalState)">
+			<div class="modal-background" @click="()=>modalState=false"></div>
+			<div class="modal-content">
+			<div class="card">
+						<h1>Register</h1>
+						<input class="input is-normal" type="text" placeholder="Username" v-model="rUser" />
+						<input class="input is-normal" type="password" placeholder="Password" v-model="rPass" />
+						<input class="input is-normal" type="password" placeholder="Confirm" v-model="rCPass" />
+						<button class="button is-normal" @click="register">Register</button>
+						<p>{{rError}}</p>
+					</div>
+			</div>
+			<button class="modal-close is-large" aria-label="close" @click="()=>modalState=false"></button>
 		</div>
 	</div>
 </template>
