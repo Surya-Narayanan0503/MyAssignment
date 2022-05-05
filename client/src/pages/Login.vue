@@ -23,12 +23,8 @@ const signin = async () => {
 		password : password.value
 	});	
 
-<<<<<<< HEAD
-	if (response.status >= 200 && response.status < 300) {
-=======
 	if (response.status >= 200 && response.status < 300) {		
 		
->>>>>>> 87eb13aeba4898fa9a33c26ae051313613bc9b0e
 		incorrect.value = "invisible";
 		setSession({
 			isLoggedIn: "true",
@@ -55,11 +51,7 @@ const rCPass = ref('');
 const rError = ref('');
 
 const register = async () => {
-<<<<<<< HEAD
-	rError.value = ' ';
-=======
 	rError.value = '';
->>>>>>> 87eb13aeba4898fa9a33c26ae051313613bc9b0e
 
 	if(rUser.value === '' || rPass.value === '' || rCPass.value === '')
 		return rError.value = 'Some field is left empty';
@@ -71,11 +63,7 @@ const register = async () => {
 		userName : rUser.value,
 		password : rPass.value
 	});
-<<<<<<< HEAD
-
-=======
 	
->>>>>>> 87eb13aeba4898fa9a33c26ae051313613bc9b0e
 	modalState.value = false;
 	rUser.value = '';
 	rPass.value = '';
