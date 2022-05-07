@@ -1,33 +1,45 @@
-import { ref } from 'vue';
+import { Ref, ref } from 'vue';
 
 export interface ITask {
-	by: string;
-	date: string;
-	done: boolean;
 	title: string;
+	desc: string;
+	date: string;
 	for: string;
+	by: string;
+	done: boolean;
 }
 
-export const tasks = ref<ITask[]>([
+export const tasks: Ref<ITask[]> = ref<ITask[]>([
 	{
-		by: 'Surya',
-		date: '20-04-2022',
+		title: 'NodeJS',
+		desc: 'Update NodeJS',
+		by: 'John',
+		for: 'Jane',
+		date: '24-03-2022',
 		done: false,
-		title: 'Update NodeJS',
-		for: 'Ragu'
 	},
 	{
-		by: 'Ragu',
-		date: '20-04-2022',
-		done: false,
-		title: 'Update Vue',
-		for: 'Surya'
-	},
-	{
-		by: 'Ragu',
-		date: '20-04-2022',
+		title: 'Vue',
+		desc: 'Update Vue',
+		by: 'Jane',
+		for: 'John',
+		date: '25-03-2022',
 		done: true,
-		title: 'Do something',
-		for: 'Surya'
-	}
+	},
+	{
+		title: 'Bulma',
+		desc: 'Update Bulma',
+		by: 'Jane',
+		for: 'John',
+		date: '25-03-2022',
+		done: true,
+	},
+	{
+		title: 'Bulma',
+		desc: 'Update Bulma',
+		by: 'Jane',
+		for: 'John',
+		date: '25-03-2022',
+		done: true,
+	},
 ]);
