@@ -13,34 +13,26 @@ const incorrect = ref('invisible');
 const { cookies } = useCookies();
 
 const signin = async () => {
-<<<<<<< HEAD
-		
-=======
+
 	
 	console.log(username.value);
 	console.log(password.value);
 	
 
->>>>>>> ccdfd4e8ba06c1c2f5f0019def4e0e2ea947bad6
 	const response = await axios.post('http://localhost:5000/api/auth', {
 		userName : username.value,
 		password : password.value
 	});	
 
-	if (response.status >= 200 && response.status < 300) {		
-<<<<<<< HEAD
-=======
-		
->>>>>>> ccdfd4e8ba06c1c2f5f0019def4e0e2ea947bad6
+	if (response.status >= 200 && response.status < 300) {	
 		incorrect.value = "invisible";
 		setSession({
 			isLoggedIn: "true",
 			token: response.data.token,
 			username: username.value,
-<<<<<<< HEAD
+
 			email: response.data.email
-=======
->>>>>>> ccdfd4e8ba06c1c2f5f0019def4e0e2ea947bad6
+
 		}, cookies);
 		router.push('/tasks');
 	}
@@ -48,11 +40,11 @@ const signin = async () => {
 	else {
 		incorrect.value = "visible";
 		username.value = "";
-<<<<<<< HEAD
+
 		password.value = "";			
-=======
+
 		password.value = "";
->>>>>>> ccdfd4e8ba06c1c2f5f0019def4e0e2ea947bad6
+
 	}
 };
 
@@ -65,18 +57,16 @@ const rPass = ref('');
 const rCPass = ref('');
 <<<<<<< HEAD
 const rEmail = ref('');
-=======
->>>>>>> ccdfd4e8ba06c1c2f5f0019def4e0e2ea947bad6
 const rError = ref('');
 
 const register = async () => {
 	rError.value = '';
 
-<<<<<<< HEAD
+
 	if(rUser.value === '' || rPass.value === '' || rCPass.value === '' || rEmail.value === '')
-=======
+
 	if(rUser.value === '' || rPass.value === '' || rCPass.value === '')
->>>>>>> ccdfd4e8ba06c1c2f5f0019def4e0e2ea947bad6
+
 		return rError.value = 'Some field is left empty';
 
 	if(rPass.value !== rCPass.value)
@@ -84,22 +74,21 @@ const register = async () => {
 
 	await axios.post('http://localhost:5000/api/users', {
 		userName : rUser.value,
-<<<<<<< HEAD
+
 		password : rPass.value,
 		email: rEmail.value
-=======
+
 		password : rPass.value
->>>>>>> ccdfd4e8ba06c1c2f5f0019def4e0e2ea947bad6
+
 	});
 	
 	modalState.value = false;
 	rUser.value = '';
 	rPass.value = '';
 	rCPass.value = '';
-<<<<<<< HEAD
+
 	rEmail.value = '';
-=======
->>>>>>> ccdfd4e8ba06c1c2f5f0019def4e0e2ea947bad6
+
 }
 
 </script>
@@ -131,10 +120,9 @@ const register = async () => {
 						<input class="input is-normal" type="text" placeholder="Username" v-model="rUser" />
 						<input class="input is-normal" type="password" placeholder="Password" v-model="rPass" />
 						<input class="input is-normal" type="password" placeholder="Confirm" v-model="rCPass" />
-<<<<<<< HEAD
+
 						<input class="input is-normal" type="text" placeholder="Email" v-model="rEmail" />
-=======
->>>>>>> ccdfd4e8ba06c1c2f5f0019def4e0e2ea947bad6
+
 						<button class="button is-normal" @click="register">Register</button>
 						<p>{{rError}}</p>
 					</div>
