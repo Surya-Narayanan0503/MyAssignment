@@ -13,26 +13,19 @@ const incorrect = ref('invisible');
 const { cookies } = useCookies();
 
 const signin = async () => {
-
-	
-	console.log(username.value);
-	console.log(password.value);
-	
-
+		
 	const response = await axios.post('http://localhost:5000/api/auth', {
 		userName : username.value,
 		password : password.value
 	});	
 
-	if (response.status >= 200 && response.status < 300) {	
+	if (response.status >= 200 && response.status < 300) {		
 		incorrect.value = "invisible";
 		setSession({
 			isLoggedIn: "true",
 			token: response.data.token,
 			username: username.value,
-
 			email: response.data.email
-
 		}, cookies);
 		router.push('/tasks');
 	}
@@ -40,11 +33,7 @@ const signin = async () => {
 	else {
 		incorrect.value = "visible";
 		username.value = "";
-
 		password.value = "";			
-
-		password.value = "";
-
 	}
 };
 
@@ -55,18 +44,13 @@ const modalClass = (modalState: boolean): string => modalState ? 'modal is-activ
 const rUser = ref('');
 const rPass = ref('');
 const rCPass = ref('');
-<<<<<<< HEAD
 const rEmail = ref('');
 const rError = ref('');
 
 const register = async () => {
 	rError.value = '';
 
-
 	if(rUser.value === '' || rPass.value === '' || rCPass.value === '' || rEmail.value === '')
-
-	if(rUser.value === '' || rPass.value === '' || rCPass.value === '')
-
 		return rError.value = 'Some field is left empty';
 
 	if(rPass.value !== rCPass.value)
@@ -74,21 +58,15 @@ const register = async () => {
 
 	await axios.post('http://localhost:5000/api/users', {
 		userName : rUser.value,
-
 		password : rPass.value,
 		email: rEmail.value
-
-		password : rPass.value
-
 	});
 	
 	modalState.value = false;
 	rUser.value = '';
 	rPass.value = '';
 	rCPass.value = '';
-
 	rEmail.value = '';
-
 }
 
 </script>
@@ -120,9 +98,7 @@ const register = async () => {
 						<input class="input is-normal" type="text" placeholder="Username" v-model="rUser" />
 						<input class="input is-normal" type="password" placeholder="Password" v-model="rPass" />
 						<input class="input is-normal" type="password" placeholder="Confirm" v-model="rCPass" />
-
 						<input class="input is-normal" type="text" placeholder="Email" v-model="rEmail" />
-
 						<button class="button is-normal" @click="register">Register</button>
 						<p>{{rError}}</p>
 					</div>
