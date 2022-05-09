@@ -86,7 +86,7 @@ const register = async () => {
 				<label>PASSWORD</label>
 				<input class="input" type="password" v-model="password" />
 			</div>
-			<p>{{invalid}}</p>
+	
 			<button class="button" @click="signin">LOG IN</button>
 			<button class="button" @click="()=>modalState=true">REGISTER</button>
 		</div>
