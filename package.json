@@ -1,21 +1,23 @@
 {
-  "name": "myassignment",
+  "name": "web-server",
   "version": "1.0.0",
-
-  "description": "",
-  "main": "index.js",
+  "description": "TODO APP",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server/index.js",
     "start": "node server/index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Surya-Narayanan0503/MyAssignment.git"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Surya-Narayanan0503/MyAssignment/issues"
-  },
-  "homepage": "https://github.com/Surya-Narayanan0503/MyAssignment#readme"
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.3.2",
+    "nodemailer": "^6.7.5",
+    "nodemon": "^2.0.15"
+  }
 }
