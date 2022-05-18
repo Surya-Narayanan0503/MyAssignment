@@ -8,6 +8,8 @@ const { todoRouter } = require('./todo');
 const { authRouter } = require('./auth');
 const { sendMailRouter } = require('./nodemail');
 
+
+app.use('/', express.static(__dirname +'/public/'))
 app.use(cors());
 app.use(express.json());
 
