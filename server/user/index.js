@@ -28,6 +28,20 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/fetchbyname', async (req, res) => {
+    try {
+
+        let query = req.query.name.toLocaleLowerCase();
+        let users = await User.find({});
+
+        let filtered = users.filter(u => u.userName.toLowerCase().includes(query));
+        res.status(200).send(filtered);
+    }
+    catch (error) {
+        res.status(400).send({ error: error.message })
+    }
+});
+
 router.get('/id', authMiddleware, async (req, res) => {
     try {
         let user = await User.findById(req.params.id).exec();

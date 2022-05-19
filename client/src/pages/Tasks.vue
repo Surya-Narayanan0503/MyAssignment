@@ -21,10 +21,33 @@ export default {
 	  notDoneTodos : [],
 	  currentTab: tabs[1],
 	  modalState : false,
-	  users : []
+	  users : [],
+	  usersFetchedForDropDown : []
     }
   },
   methods : {
+
+	async fetchUsersByName(){
+
+		if(this.todoFor === ""){
+			this.usersFetchedForDropDown = [];
+		}
+		else {
+			const { data, status } = await axios.get(
+				`http://localhost:5000/api/users/fetchbyname?name=${this.todoFor}`,
+				{
+					headers: {
+					'x-auth-token': this.token,
+					},
+				},
+			);
+	
+			if(status >= 200 && status < 300){
+				this.usersFetchedForDropDown = [...data];
+			}
+		}
+
+	},
 
 	async getAllUsers(){
 		const { data } = 
@@ -217,14 +240,19 @@ export default {
 					<div class="dropdown-trigger">
 						<div class="field">
 							<div class="control">
-								<input class="input is-normal" type="search	" placeholder="For" v-model="todoFor" />
+								<input
+								 	v-on:input="fetchUsersByName"
+									class="input is-normal" 
+									type="search	
+									" placeholder="For" 
+									v-model="todoFor" />
 							</div>
 						</div>
 					</div>
 					<div class="dropdown-menu" id="dropdown-menu" role="menu">
 						<div class="dropdown-content">
 							<a href="#" class="dropdown-item" 
-								v-for="user in users" @click="()=>todoFor=user.userName">
+								v-for="user in usersFetchedForDropDown" @click="()=>todoFor=user.userName">
 								{{user.userName}}
 							</a>
 						</div>
